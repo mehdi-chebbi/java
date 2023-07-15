@@ -1,0 +1,44 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 15 juil. 2023, 12:47:51
+    Author     : Khalil
+*/
+
+/* Style for the delete button */
+#deletebnt{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+
+/* Style for the edit button */
+#modbtn {
+    -fx-background-color: #4CAF50; /* Green color */
+    -fx-text-fill: white;
+}
+/* Styling the TableView */
+#UserTableView {
+    -fx-background-color: #ADD8E6; /* Background color */
+    -fx-font-size: 14px; /* Font size */
+}
+
+/* Styling the Table Header */
+#UserTableView .column-header-background {
+    -fx-background-color: #1c4ceb; /* Header background color */
+    -fx-font-weight: bold; /* Header font weight */
+}
+
+/* Styling the Table Rows */
+#UserTableView .table-row-cell {
+    -fx-background-color: white; /* Row background color */
+    -fx-text-fill: black; /* Row text color */
+}
+
+/* Styling the Selected Row */
+#UserTableView .table-row-cell:selected {
+    -fx-background-color: #214ad1; /* Selected row background color */
+    -fx-text-fill: black; /* Selected row text color */
+}
