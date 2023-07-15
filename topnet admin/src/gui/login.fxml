@@ -20,9 +20,9 @@
       </Hyperlink>
       <Button fx:id="sign_in_button" layoutX="415.0" layoutY="433.0" mnemonicParsing="false" onAction="#sign_in" prefHeight="28.0" prefWidth="97.0" text="Sign in" />
       <Label fx:id="error_label" textFill="red" visible="false" />
-      <ImageView fitHeight="206.0" fitWidth="351.0" layoutX="295.0" layoutY="14.0">
+      <ImageView fitHeight="243.0" fitWidth="514.0" layoutX="204.0" layoutY="14.0">
          <image>
-  <Image url="file:///C:/Users/mehdi/Downloads/logo-topnet.png" />
+  <Image url="@../images/logo-topnet.png" />
 
          </image>
       </ImageView>

@@ -73,7 +73,8 @@ public void editUserRole(int userId, String newRole) {
 }
 
 
-public boolean verifyCredentials(String login, String password) {
+public user verifyCredentials(String login, String password) {
+    user u = null;
     try {
         String query = "SELECT * FROM user WHERE login = ? AND psw = ?";
         PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(query);
@@ -82,17 +83,36 @@ public boolean verifyCredentials(String login, String password) {
         ResultSet rs = pst.executeQuery();
 
         if (rs.next()) {
-            // Credentials are correct
-            return true;
-        } else {
-            // Credentials are incorrect
-            return false;
+            u = new user();
+
+            Timestamp createdOn = Timestamp.valueOf(rs.getString("createdOn"));
+            Timestamp modifiedOn = rs.getString("modifiedOn") != null ? Timestamp.valueOf(rs.getString("modifiedOn")) : null;
+
+            u.setIdUser(rs.getInt("idUser"));
+            u.setLogin(rs.getString("login"));
+            u.setPassword(rs.getString("psw"));
+            u.setFirstName(rs.getString("nom"));
+            u.setLastName(rs.getString("prenom"));
+            u.setRole(rs.getString("role"));
+            u.setCreatedOn(createdOn);
+            u.setModifiedOn(modifiedOn);
+
+            String createdBy = rs.getString("createdBy");
+            if (createdBy != null) {
+                u.setCreatedBy(createdBy);
+            }
+
+            String modifiedBy = rs.getString("modifiedBy");
+            if (modifiedBy != null) {
+                u.setModifiedBy(modifiedBy);
+            }
         }
     } catch (SQLException ex) {
         System.out.println(ex.getMessage());
-        return false;
     }
+    return u;
 }
+
 public String getUserRole(String login) {
     try {
         String query = "SELECT role FROM user WHERE login = ?";

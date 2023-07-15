@@ -133,7 +133,9 @@ private Label confirmPassLabel;
         new_user.setLastName(nom);
         new_user.setLogin(mail);
         new_user.setPassword(password);
-        new_user.setRole("Utilisateur");
+        new_user.setRole("Utilisateur"); 
+        new_user.setCreatedBy(mail); 
+        new_user.setModifiedBy("not_modified");
 
         // Add the user
         UserCRUD CRUD = new UserCRUD();

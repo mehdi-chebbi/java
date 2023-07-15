@@ -5,6 +5,7 @@
  */
 package gui;
 
+import entities.UserSession;
 import entities.user;
 import java.net.URL;
 import java.sql.SQLException;
@@ -61,7 +62,9 @@ public class Home_adminController implements Initializable {
     @FXML
     private Button deletebnt;
     @FXML
-    private TextField lnametf;
+    private TextField lnametf; 
+    
+    UserSession session = UserSession.getInstance();
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -125,7 +128,8 @@ public class Home_adminController implements Initializable {
             u.setFirstName(fnametf.getText()); 
             u.setLastName(lnametf.getText());
             u.setModifiedOn(timestamp);
-            u.setIdUser(selecteduser.getIdUser());
+            u.setIdUser(selecteduser.getIdUser()); 
+            u.setModifiedBy(session.getLoggedInUser().getLogin());
             
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Edit confirmation");

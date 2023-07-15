@@ -5,6 +5,8 @@
  */
 package gui;
 
+import entities.UserSession;
+import entities.user;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,6 +23,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.util.Properties;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javax.mail.*;
 import javax.mail.internet.*;
 /**
@@ -40,6 +44,8 @@ public class LoginController implements Initializable {
         private Button sign_in_button;
     @FXML
     private Hyperlink register_link;
+    @FXML
+    private Label error_label;
 
     /**
      * Initializes the controller class.
@@ -54,40 +60,54 @@ public class LoginController implements Initializable {
     @FXML
     private void recover_password(ActionEvent event) {
     }
+    
+    
+    
+    
+    
 
-    @FXML
-    private void sign_in(ActionEvent event) {
-        String username = username_field.getText();
+  @FXML
+private void sign_in(ActionEvent event) {
+    String username = username_field.getText();
     String password = pass_field.getText();
 
-    // Perform authentication or other actions using the username and password
+    UserCRUD userCRUD = new UserCRUD();
+    user loggedUser = userCRUD.verifyCredentials(username, password);
+    
+    if (loggedUser != null) {
+        if (loggedUser.getRole().equals("ADMIN")) {
+            try { 
+                UserSession session = UserSession.getInstance();
+                session.setLoggedInUser(loggedUser); 
+                System.out.println(loggedUser);
+                
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("home_admin.fxml"));
+                Parent root = loader.load();
 
-    // Example: Verify credentials using UserCRUD's verifyCredentials method
-        UserCRUD userCRUD = new UserCRUD();
-    boolean credentialsValid = userCRUD.verifyCredentials(username, password);
-    if (credentialsValid) {
-        try {
-            // Load the home.fxml file
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("home_admin.fxml"));
-            Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.show();
 
-            // Create a new stage and set the home.fxml scene
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Close the current login stage (assuming the login stage is the owner of the event source)
-            ((Stage) sign_in_button.getScene().getWindow()).close();
-        } catch (IOException e) {
-            // Handle any exception that occurs while loading the home.fxml file
-            e.printStackTrace();
+                ((Stage) sign_in_button.getScene().getWindow()).close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Alert a1 = new Alert(Alert.AlertType.ERROR);
+            a1.setTitle("Error");
+            a1.setContentText("Insufficient privileges. Only users with the ADMIN role can access the interface.!");
+            a1.show();
+            System.out.println("non");
         }
     } else {
-        // Credentials are incorrect, show an error message or handle accordingly
-        System.out.println("Invalid login credentials. Please check your username and password.");
+            Alert a2 = new Alert(Alert.AlertType.ERROR);
+            a2.setTitle("Error");
+            a2.setContentText("Invalid login credentials. Please check your username and password.!");
+            a2.show();
+            System.out.println("non");
+        
     }
-    }
-
+}
     @FXML
     private void register(ActionEvent event) {
          try {
