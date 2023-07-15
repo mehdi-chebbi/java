@@ -34,6 +34,10 @@ public class user {
         this.lastName = lastName;
     }
 
+    public user(int id, String login, String password, String firstName, String lastName, String createdOn, String modifiedOn, String createdBy, String modifiedBy, String role) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public int getIdUser() {
         return idUser;
     }

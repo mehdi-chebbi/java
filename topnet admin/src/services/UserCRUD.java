@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class UserCRUD {
         System.out.println(ex.getMessage());
     }
 }
-public void deleteUserById(int userId) {
+public void deleteUserById(int userId) throws SQLException {
     try {
         String query = "DELETE FROM user WHERE Iduser = ?";
         PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(query);
@@ -131,6 +132,75 @@ public String getCreatedBy(String login) {
         return null;
     }
 }
+ public List<user> recuperer() {
+    List<user> userList = new ArrayList<>();
+    String query = "SELECT * FROM user";
+
+    try {
+        PreparedStatement statement = MyConnection.getInstance().getCnx().prepareStatement(query);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()) {
+            user u = new user(); // Create a new user object for each iteration
+
+            Timestamp createdOn = Timestamp.valueOf(resultSet.getString("createdOn"));
+            Timestamp modifiedOn = resultSet.getString("modifiedOn") != null ? Timestamp.valueOf(resultSet.getString("modifiedOn")) : null;
+
+            u.setIdUser(resultSet.getInt("idUser"));
+            u.setLogin(resultSet.getString("login"));
+            u.setPassword(resultSet.getString("psw"));
+            u.setFirstName(resultSet.getString("nom"));
+            u.setLastName(resultSet.getString("prenom"));
+            u.setRole(resultSet.getString("role"));
+            u.setCreatedOn(createdOn);
+            u.setModifiedOn(modifiedOn);
+
+            String createdBy = resultSet.getString("createdBy");
+            if (createdBy != null) {
+                u.setCreatedBy(createdBy);
+            }
+
+            String modifiedBy = resultSet.getString("modifiedBy");
+            if (modifiedBy != null) {
+                u.setModifiedBy(modifiedBy);
+            }
+
+            userList.add(u);
+        }
+    } catch (SQLException ex) {
+        System.err.println(ex.getMessage() + " Error!");
+    }
+
+    return userList;
+}
+ public void editUser(user userObj) throws SQLException {
+    try {
+        String query = "UPDATE user SET login = ?, psw = ?, nom = ?, prenom = ?, role = ?, modifiedOn = ?, modifiedBy = ? WHERE Iduser = ?";
+        PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(query);
+        pst.setString(1, userObj.getLogin());
+        pst.setString(2, userObj.getPassword());
+        pst.setString(3, userObj.getFirstName());
+        pst.setString(4, userObj.getLastName());
+        pst.setString(5, userObj.getRole());
+        pst.setTimestamp(6, userObj.getModifiedOn());
+        pst.setString(7, userObj.getModifiedBy());
+        pst.setInt(8, userObj.getIdUser());
+        
+        int rowsAffected = pst.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println("User with ID " + userObj.getIdUser() + " updated successfully!");
+        } else {
+            System.out.println("User not found with ID: " + userObj.getIdUser());
+        }
+    } catch (SQLException ex) {
+        System.err.println("Error updating user: " + ex.getMessage());
+        ex.printStackTrace(); // Print the stack trace for debugging purposes
+    }
+}
+
+
+
 
 
 }
