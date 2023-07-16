@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.LoginController">
    <children>
       <TextField fx:id="pass_field" layoutX="383.0" layoutY="386.0" prefHeight="26.0" prefWidth="162.0" promptText="password" />
       <TextField fx:id="username_field" layoutX="383.0" layoutY="325.0" prefHeight="26.0" prefWidth="162.0" promptText="Username" />
@@ -20,9 +20,9 @@
       </Hyperlink>
       <Button fx:id="sign_in_button" layoutX="415.0" layoutY="433.0" mnemonicParsing="false" onAction="#sign_in" prefHeight="28.0" prefWidth="97.0" text="Sign in" />
       <Label fx:id="error_label" textFill="red" visible="false" />
-      <ImageView fitHeight="206.0" fitWidth="351.0" layoutX="295.0" layoutY="14.0">
+      <ImageView fitHeight="243.0" fitWidth="514.0" layoutX="204.0" layoutY="14.0">
          <image>
-  <Image url="file:///C:/Users/mehdi/Downloads/logo-topnet.png" />
+  <Image url="@../images/logo-topnet.png" />
 
          </image>
       </ImageView>

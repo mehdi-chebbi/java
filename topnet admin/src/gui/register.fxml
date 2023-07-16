@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterController">
    <children>
       <TextField fx:id="nom_tf" layoutX="579.0" layoutY="68.0" prefHeight="43.0" prefWidth="225.0" promptText="Nom" />
       <ImageView fitHeight="158.0" fitWidth="302.0" layoutX="52.0" layoutY="205.0">
@@ -48,5 +48,6 @@
       <Label fx:id="confirmPassLabel" layoutX="580.0" layoutY="507.0" prefHeight="18.0" prefWidth="226.0" />
       <PasswordField fx:id="password_tf" layoutX="578.0" layoutY="350.0" prefHeight="43.0" prefWidth="226.0" promptText="Mot de passe" />
       <PasswordField fx:id="confirm_pass_tf" layoutX="580.0" layoutY="451.0" prefHeight="43.0" prefWidth="226.0" promptText="Confirmer votre Mot de passe" />
+      <Button fx:id="back_button" layoutX="85.0" layoutY="568.0" mnemonicParsing="false" onAction="#back_action" text="Back" />
    </children>
 </AnchorPane>

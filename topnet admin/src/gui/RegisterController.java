@@ -6,6 +6,7 @@
 package gui;
 
 import entities.user;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -14,7 +15,11 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
@@ -22,6 +27,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -53,6 +59,8 @@ public class RegisterController implements Initializable {
     private TextField password_tf;
     @FXML
     private Button add_new_user_button;
+    @FXML
+    private Button back_button;
 
     /**
      * Initializes the controller class.
@@ -124,20 +132,39 @@ private Label confirmPassLabel;
         // Send email
 
         // Create a Timestamp object using the current time
-        Timestamp timestamp = new Timestamp(currentTimeMillis);
 
         // Create a new user instance and set the properties
         user new_user = new user();
-        new_user.setCreatedOn(timestamp);
         new_user.setFirstName(prenom);
         new_user.setLastName(nom);
         new_user.setLogin(mail);
         new_user.setPassword(password);
-        new_user.setRole("Utilisateur");
+        new_user.setRole("Utilisateur"); 
+        new_user.setCreatedBy(mail); 
+        new_user.setModifiedBy("not_modified");
 
         // Add the user
         UserCRUD CRUD = new UserCRUD();
         CRUD.addUser(new_user);
+        
+        
+            try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        
+        
+        
+        
     } else {
         // Code is incorrect, display an error message
         Alert alert = new Alert(AlertType.ERROR);
@@ -262,6 +289,23 @@ String body = "<!DOCTYPE html>\n" +
     }
     return randomNumber;
 }
+
+    @FXML
+    private void back_action(ActionEvent event) {
+            try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    }
 
     
     
