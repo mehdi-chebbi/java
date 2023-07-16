@@ -9,44 +9,45 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterController">
+<AnchorPane id="AnchorPane" prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #00ACFF;" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="gui.RegisterController">
    <children>
-      <TextField fx:id="nom_tf" layoutX="579.0" layoutY="68.0" prefHeight="43.0" prefWidth="225.0" promptText="Nom" />
+      <TextField fx:id="nom_tf" layoutX="579.0" layoutY="68.0" prefHeight="43.0" prefWidth="225.0" promptText="Name" />
       <ImageView fitHeight="158.0" fitWidth="302.0" layoutX="52.0" layoutY="205.0">
          <image>
   <Image url="file:///C:/Users/mehdi/Downloads/logo-topnet.png" />
          </image>
       </ImageView>
-      <TextField fx:id="prenom_tf" layoutX="578.0" layoutY="161.0" prefHeight="43.0" prefWidth="226.0" promptText="Prenom" />
-      <TextField fx:id="mail_tf" layoutX="579.0" layoutY="253.0" prefHeight="43.0" prefWidth="225.0" promptText="Adresse mail" />
-      <Label layoutX="581.0" layoutY="32.0" text="Nom">
+      <TextField fx:id="prenom_tf" layoutX="578.0" layoutY="161.0" prefHeight="43.0" prefWidth="226.0" promptText="Last Name" />
+      <TextField fx:id="mail_tf" layoutX="579.0" layoutY="253.0" prefHeight="43.0" prefWidth="225.0" promptText="E-Mail" />
+      <Label layoutX="581.0" layoutY="32.0" text="Name">
          <font>
             <Font name="Corbel" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="581.0" layoutY="129.0" text="Prenom">
+      <Label layoutX="581.0" layoutY="129.0" text="Last Name">
          <font>
             <Font name="Corbel" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="581.0" layoutY="420.0" text="Confirmer votre Mot de passe">
+      <Label layoutX="581.0" layoutY="420.0" text="Confirm Password">
          <font>
             <Font name="Corbel" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="578.0" layoutY="313.0" text="Mot de passe">
+      <Label layoutX="578.0" layoutY="313.0" text="Password">
          <font>
             <Font name="Corbel" size="20.0" />
          </font>
       </Label>
-      <Label layoutX="580.0" layoutY="224.0" text="Adresse mail">
+      <Label layoutX="580.0" layoutY="224.0" text="E-Mail">
          <font>
             <Font name="Corbel" size="20.0" />
          </font>
       </Label>
-      <Button fx:id="add_new_user_button" layoutX="661.0" layoutY="568.0" mnemonicParsing="false" onAction="#add_new_user" text="Inscription" />
+      <Button fx:id="add_new_user_button" layoutX="661.0" layoutY="568.0" mnemonicParsing="false" onAction="#add_new_user" text="sign up" />
       <Label fx:id="confirmPassLabel" layoutX="580.0" layoutY="507.0" prefHeight="18.0" prefWidth="226.0" />
-      <PasswordField fx:id="password_tf" layoutX="578.0" layoutY="350.0" prefHeight="43.0" prefWidth="226.0" promptText="Mot de passe" />
-      <PasswordField fx:id="confirm_pass_tf" layoutX="580.0" layoutY="451.0" prefHeight="43.0" prefWidth="226.0" promptText="Confirmer votre Mot de passe" />
+      <PasswordField fx:id="password_tf" layoutX="578.0" layoutY="350.0" prefHeight="43.0" prefWidth="226.0" promptText="Password" />
+      <PasswordField fx:id="confirm_pass_tf" layoutX="580.0" layoutY="451.0" prefHeight="43.0" prefWidth="226.0" promptText="Confirm Password" />
+      <Button fx:id="back_button" layoutX="85.0" layoutY="568.0" mnemonicParsing="false" onAction="#back_action" text="Back" />
    </children>
 </AnchorPane>

@@ -6,22 +6,32 @@
 package gui;
 
 import entities.user;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -53,6 +63,9 @@ public class RegisterController implements Initializable {
     private TextField password_tf;
     @FXML
     private Button add_new_user_button;
+    @FXML
+    private Button back_button;
+        UserCRUD CRUD = new UserCRUD();
 
     /**
      * Initializes the controller class.
@@ -66,6 +79,15 @@ public class RegisterController implements Initializable {
     confirm_pass_tf.textProperty().addListener((observable, oldValue, newValue) -> {
         checkPasswordMatch();
     });    }    
+    
+    private static final String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+
+    public static boolean isValidEmail(String email) {
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
 @FXML
 private Label confirmPassLabel;
     @FXML
@@ -81,16 +103,21 @@ private Label confirmPassLabel;
         StringBuilder errorMessage = new StringBuilder();
         if (nom.isEmpty()) {
             errorMessage.append("Nom field is empty\n");
-        }
+        }        
         if (prenom.isEmpty()) {
             errorMessage.append("Prenom field is empty\n");
         }
         if (mail.isEmpty()) {
             errorMessage.append("Mail field is empty\n");
-        }
+        }if (!isValidEmail(mail)) {
+    errorMessage.append("Invalid email address\n");
+}
         if (password.isEmpty()) {
             errorMessage.append("Password field is empty\n");
         }
+         if (password.length() < 8) {
+    errorMessage.append("Password should be at least 8 characters long\n");
+}
         if (confirmPass.isEmpty()) {
             errorMessage.append("Confirm Password field is empty\n");
         }
@@ -103,7 +130,25 @@ private Label confirmPassLabel;
         alert.showAndWait();
         return;
     }
-
+    
+      boolean userExists = CRUD.checkUserExists(mail);
+    if (userExists) {
+        Alert alert = new Alert(AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText("User Already Exists");
+        alert.setContentText("A user with the given email already exists. Please choose a different email.");
+        alert.showAndWait();
+        return;
+    }
+boolean isValidEmail = isValidEmail(mail);
+if (!isValidEmail) {
+    Alert alert = new Alert(AlertType.ERROR);
+    alert.setTitle("Error");
+    alert.setHeaderText("Invalid Email");
+    alert.setContentText("The email address entered is not valid. Please enter a valid email address.");
+    alert.showAndWait();
+    return;
+}
     // Open a new window to prompt for a code
     TextInputDialog codeDialog = new TextInputDialog();
     codeDialog.setTitle("Enter Code");
@@ -124,20 +169,40 @@ private Label confirmPassLabel;
         // Send email
 
         // Create a Timestamp object using the current time
-        Timestamp timestamp = new Timestamp(currentTimeMillis);
 
         // Create a new user instance and set the properties
         user new_user = new user();
-        new_user.setCreatedOn(timestamp);
         new_user.setFirstName(prenom);
         new_user.setLastName(nom);
         new_user.setLogin(mail);
         new_user.setPassword(password);
-        new_user.setRole("Utilisateur");
+        new_user.setRole("Utilisateur"); 
+        new_user.setCreatedBy(mail); 
+        new_user.setModifiedBy("not_modified");
 
         // Add the user
         UserCRUD CRUD = new UserCRUD();
         CRUD.addUser(new_user);
+             openRegistrationCompletionScene();
+
+        
+            try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+        
+        
+        
+        
     } else {
         // Code is incorrect, display an error message
         Alert alert = new Alert(AlertType.ERROR);
@@ -168,6 +233,33 @@ private Label confirmPassLabel;
     
     
 
+}
+    
+    private void openRegistrationCompletionScene() {
+    try {
+        // Create a new stage for the registration completion scene
+        Stage completionStage = new Stage();
+        
+        // Create a label with the registration completion message
+        Label messageLabel = new Label("Registration completed. Waiting for admin approval.");
+        
+        // Create a VBox to hold the message label
+        VBox vbox = new VBox();
+        vbox.setAlignment(Pos.CENTER);
+        vbox.getChildren().add(messageLabel);
+        
+        // Create a new scene with the VBox
+        Scene completionScene = new Scene(vbox, 400, 200);
+        
+        // Set the scene to the completion stage
+        completionStage.setScene(completionScene);
+        completionStage.setTitle("Registration Completed");
+        
+        // Show the completion stage
+        completionStage.show();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
 }
     
    private int send_mail(String mail, String Name) {
@@ -204,12 +296,12 @@ String body = "<!DOCTYPE html>\n" +
 "    <tr>\n" +
 "      <td bgcolor=\"#ffffff\" style=\"padding: 40px 30px;\">\n" +
 "        <h2>Thank you for your registration!</h2>\n" +
-"        <p>Hello "+Name+",</p>\n" +
-"        <p>We are excited to have you on board. Please click the button below to confirm your email address:</p>\n" +
+"        <p>Hello " + Name + ",</p>\n" +
+"        <p>We are excited to have you on board. Please use the following code to confirm your email address:</p>\n" +
 "        <table align=\"center\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"margin-top: 30px;\">\n" +
 "          <tr>\n" +
-"            <td align=\"center\" bgcolor=\"#007bff\" style=\"border-radius: 5px;\">\n" +
-"              <a href=\"[ConfirmationLink]\" target=\"_blank\" style=\"display: inline-block; padding: 15px 30px; color: #ffffff; text-decoration: none; font-weight: bold;\">"+randomNumber+"</a>\n" +
+"            <td align=\"center\" bgcolor=\"#f5f5f5\" style=\"border: 1px solid #007bff; border-radius: 5px; padding: 15px 30px;\">\n" +
+"              <span style=\"font-weight: bold; font-size: 16px;\">" + randomNumber + "</span>\n" +
 "            </td>\n" +
 "          </tr>\n" +
 "        </table>\n" +
@@ -224,6 +316,7 @@ String body = "<!DOCTYPE html>\n" +
 "  </table>\n" +
 "</body>\n" +
 "</html>";
+
 
 
     // SMTP server configuration
@@ -262,6 +355,23 @@ String body = "<!DOCTYPE html>\n" +
     }
     return randomNumber;
 }
+
+    @FXML
+    private void back_action(ActionEvent event) {
+            try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    }
 
     
     
