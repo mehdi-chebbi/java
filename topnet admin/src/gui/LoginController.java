@@ -46,6 +46,7 @@ public class LoginController implements Initializable {
     private Hyperlink register_link;
     @FXML
     private Label error_label;
+    
 
     /**
      * Initializes the controller class.
@@ -59,6 +60,19 @@ public class LoginController implements Initializable {
 
     @FXML
     private void recover_password(ActionEvent event) {
+        try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("recover.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
     }
     
     
@@ -66,7 +80,7 @@ public class LoginController implements Initializable {
     
     
 
-  @FXML
+ @FXML
 private void sign_in(ActionEvent event) {
     String username = username_field.getText();
     String password = pass_field.getText();
@@ -76,38 +90,49 @@ private void sign_in(ActionEvent event) {
     
     if (loggedUser != null) {
         if (loggedUser.getRole().equals("ADMIN")) {
-            try { 
-                UserSession session = UserSession.getInstance();
-                session.setLoggedInUser(loggedUser); 
-                System.out.println(loggedUser);
-                
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("home_admin.fxml"));
-                Parent root = loader.load();
+            // Check if the 'createdby' attribute is null
+            if (loggedUser.getCreatedBy() != null) {
+                try { 
+               
+                    UserSession session = UserSession.getInstance();
+                    session.setLoggedInUser(loggedUser); 
+                    System.out.println(loggedUser);
+                    session.setIsLoggedIn(true);
+                    
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("home_admin.fxml"));
+                    Parent root = loader.load();
 
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.show();
 
-                ((Stage) sign_in_button.getScene().getWindow()).close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                    ((Stage) sign_in_button.getScene().getWindow()).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Alert a1 = new Alert(Alert.AlertType.ERROR);
+                a1.setTitle("Error");
+                a1.setContentText("Account is not activated by admin yet!");
+                a1.show();
+                System.out.println("non");
             }
         } else {
-            Alert a1 = new Alert(Alert.AlertType.ERROR);
-            a1.setTitle("Error");
-            a1.setContentText("Insufficient privileges. Only users with the ADMIN role can access the interface.!");
-            a1.show();
+            Alert a2 = new Alert(Alert.AlertType.ERROR);
+            a2.setTitle("Error");
+            a2.setContentText("Insufficient privileges. Only users with the ADMIN role can access the interface!");
+            a2.show();
             System.out.println("non");
         }
     } else {
-            Alert a2 = new Alert(Alert.AlertType.ERROR);
-            a2.setTitle("Error");
-            a2.setContentText("Invalid login credentials. Please check your username and password.!");
-            a2.show();
-            System.out.println("non");
-        
-    }
+        Alert a3 = new Alert(Alert.AlertType.ERROR);
+        a3.setTitle("Error");
+        a3.setContentText("Invalid login credentials. Please check your username and password!");
+        a3.show();
+        System.out.println("non");
+    } 
 }
+
     @FXML
     private void register(ActionEvent event) {
          try {
@@ -127,42 +152,5 @@ private void sign_in(ActionEvent event) {
     
     
     
-        public static void sendConfirmationEmail(String username, String email) {
-        // Gmail account details
-        final String usernamee = "mehdi.chebbi@gmail.com";
-        final String password = "azeqsdwxc123";
-
-        // SMTP server properties
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        // Create a Session object
-        Session session = Session.getInstance(props, new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(usernamee, password);
-            }
-        });
-
-        try {
-            // Create a MimeMessage object
-            MimeMessage message = new MimeMessage(session);
-
-            // Set the sender and recipient addresses
-            message.setFrom(new InternetAddress(usernamee));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
-
-            // Set the subject and content
-            message.setSubject("Confirmation Email");
-            message.setText(String.format("Dear %s,\n\nThank you for signing up! Your account has been successfully created.", usernamee));
-
-            // Send the email
-            Transport.send(message);
-            System.out.println("Confirmation email sent successfully.");
-        } catch (MessagingException e) {
-            System.out.println("Failed to send confirmation email. Error: " + e.getMessage());
-        }
-    }
+      
 }

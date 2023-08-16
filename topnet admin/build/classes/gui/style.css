@@ -41,4 +41,31 @@ and open the template in the editor.
 #UserTableView .table-row-cell:selected {
     -fx-background-color: #214ad1; /* Selected row background color */
     -fx-text-fill: black; /* Selected row text color */
+} 
+
+#pending_button{
+    -fx-background-color: orange;
+    -fx-text-fill: white;
+}
+
+#accept_button{
+    -fx-background-color: green;
+    -fx-text-fill: white;
+}
+
+#delete_button{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+#add_new_user_button {
+    -fx-background-color: #4CAF50; /* Green color */
+    -fx-text-fill: white;
+}
+#back_button{
+    -fx-background-color: red;
+    -fx-text-fill: white;
+}
+#savebtn{
+    -fx-background-color: green;
+    -fx-text-fill: white;
 }

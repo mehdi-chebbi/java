@@ -12,7 +12,7 @@ package entities;
 public class UserSession extends user { 
      private static UserSession instance; 
      private boolean isLoggedIn;   
-     private user loggedInUser;
+     private static user loggedInUser;
      
      
      
@@ -40,7 +40,13 @@ public class UserSession extends user {
     }
       
      
+     public boolean getIsLoggedIn(){
+         return isLoggedIn;
+     }
+     public void setIsLoggedIn(boolean isLoggedIn){
+         this.isLoggedIn = isLoggedIn;
      
+     }
      
     public boolean isIsLoggedIn() {
         return isLoggedIn;

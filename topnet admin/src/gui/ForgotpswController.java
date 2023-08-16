@@ -26,17 +26,40 @@ public class ForgotpswController implements Initializable {
     private TextField cfnewpsw;
     @FXML
     private Button savebtn;
+    private String mail;
+
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+    
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+
+        System.out.print(mail);
     }    
 
     @FXML
     private void save(ActionEvent event) {
+         String newPassword = newpswtf.getText();
+    String confirmPassword = cfnewpsw.getText();
+
+    if (newPassword.equals(confirmPassword)) {
+         
+        
+        
+    } else {
+        
+        
+        
+    }
+        
+        
+        
+        
     }
     
 }

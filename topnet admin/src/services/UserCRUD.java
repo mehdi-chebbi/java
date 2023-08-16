@@ -141,10 +141,8 @@ public String getCreatedBy(String login) {
         ResultSet rs = pst.executeQuery();
 
         if (rs.next()) {
-            // Retrieve the 'createdby' value from the result set
             return rs.getString("createdby");
         } else {
-            // User not found
             return null;
         }
     } catch (SQLException ex) {
@@ -161,7 +159,7 @@ public String getCreatedBy(String login) {
         ResultSet resultSet = statement.executeQuery();
 
         while (resultSet.next()) {
-            user u = new user(); // Create a new user object for each iteration
+            user u = new user();
 
             Timestamp createdOn = Timestamp.valueOf(resultSet.getString("createdOn"));
             Timestamp modifiedOn = resultSet.getString("modifiedOn") != null ? Timestamp.valueOf(resultSet.getString("modifiedOn")) : null;
@@ -215,10 +213,59 @@ public String getCreatedBy(String login) {
         }
     } catch (SQLException ex) {
         System.err.println("Error updating user: " + ex.getMessage());
-        ex.printStackTrace(); // Print the stack trace for debugging purposes
+        ex.printStackTrace(); 
     }
 }
 
+public boolean checkUserExists(String login) {
+    try {
+        String query = "SELECT COUNT(*) FROM user WHERE login = ?";
+        PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(query);
+        pst.setString(1, login);
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            int count = rs.getInt(1);
+            return count > 0; 
+        }
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+    }
+    return false; 
+}
+public void changePassword(String login, String newPassword) {
+    try {
+        String query = "UPDATE user SET psw = ? WHERE login = ?";
+        PreparedStatement pst = MyConnection.getInstance().getCnx().prepareStatement(query);
+        pst.setString(1, newPassword);
+        pst.setString(2, login);
+        
+        int rowsAffected = pst.executeUpdate();
+
+        if (rowsAffected > 0) {
+            System.out.println("Password changed successfully for login: " + login);
+        } else {
+            System.out.println("User not found with login: " + login);
+        }
+    } catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+    }
+}
+ public void updateCreatedBy(int userId, String newCreatedBy) throws SQLException {
+        
+        PreparedStatement statement = null;
+
+        try {            
+            String sql = "UPDATE user SET createdBy = ? WHERE idUser  = ?";
+            statement = MyConnection.getInstance().getCnx().prepareStatement(sql);
+            statement.setString(1, newCreatedBy);
+            statement.setInt(2, userId);
+            statement.executeUpdate();
+        }  catch (SQLException ex) {
+        System.out.println(ex.getMessage());
+    }
+    }
+ 
 
 
 

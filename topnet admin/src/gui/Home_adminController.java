@@ -25,6 +25,21 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import services.UserCRUD;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Hyperlink;
+import javafx.scene.control.MenuButton;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -65,26 +80,40 @@ public class Home_adminController implements Initializable {
     private TextField lnametf; 
     
     UserSession session = UserSession.getInstance();
-    
+    @FXML
+    private ImageView logoiv;
+    @FXML
+    private Button pending_button;
+    UserSession userSession = UserSession.getInstance();
+    @FXML
+    private Hyperlink logout;
+
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // Set up the table columns
+public void initialize(URL url, ResourceBundle rb) {
+
+// Check if a user is logged in
+
         fncolumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        lnamecolumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        concolumn.setCellValueFactory(new PropertyValueFactory<>("createdOn"));
-        lmodcolumn.setCellValueFactory(new PropertyValueFactory<>("modifiedOn"));
-        creabycolumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
-        modbycolumn.setCellValueFactory(new PropertyValueFactory<>("modifiedBy"));
-        rolecolumn.setCellValueFactory(new PropertyValueFactory<>("role"));
+    lnamecolumn.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+    concolumn.setCellValueFactory(new PropertyValueFactory<>("createdOn"));
+    lmodcolumn.setCellValueFactory(new PropertyValueFactory<>("modifiedOn"));
+    creabycolumn.setCellValueFactory(new PropertyValueFactory<>("createdBy"));
+    modbycolumn.setCellValueFactory(new PropertyValueFactory<>("modifiedBy"));
+    rolecolumn.setCellValueFactory(new PropertyValueFactory<>("role"));
 
-        // Call the method to fetch user data
-        UserCRUD userCRUD = new UserCRUD();
-        List<user> userList = userCRUD.recuperer();
+    // Call the method to fetch user data
+    UserCRUD userCRUD = new UserCRUD();
+    List<user> userList = userCRUD.recuperer();
 
-        // Populate the table view with the user data
-        UserTableView.getItems().addAll(userList);
-    }
-    
+    // Filter out users with createdBy attribute as null
+    List<user> filteredUserList = userList.stream()
+            .filter(user -> user.getCreatedBy() != null)
+            .collect(Collectors.toList());
+
+    // Populate the table view with the filtered user data
+    UserTableView.getItems().addAll(filteredUserList);
+}
+
     
     @FXML
     private void clicked(javafx.scene.input.MouseEvent event) { 
@@ -207,4 +236,51 @@ public class Home_adminController implements Initializable {
     
     }
 
+@FXML
+private void pending(ActionEvent event) {
+    try {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("Pending.fxml"));
+        Parent root = loader.load();
+
+        // Get the current stage
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Set the new FXML file as the content of the stage
+        stage.setScene(new Scene(root));
+        stage.show();
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    
+    
+}
+
+    @FXML
+    private void logoutfn(ActionEvent event) { 
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Are you sure you want to log out ?");
+        alert.setContentText("Please Confirm."); 
+        
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+        try { 
+                    UserSession userSession = UserSession.getInstance(); 
+                    userSession.setLoggedInUser(null);
+             
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
+                    Parent root = loader.load();
+
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+
+                    ((Stage) logout.getScene().getWindow()).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } 
+        System.out.println(UserSession.getInstance());
+    }
+
+} 
 }
